@@ -1,13 +1,6 @@
 pipeline {
     agent any
     stages {
-        stage('Checkout') {
-            steps {
-                // Checkout the code from your Git repository
-                git 'https://github.com/Grunt-prog/flask-app-cicd.git' // Change to your GitHub repository URL
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 script {
