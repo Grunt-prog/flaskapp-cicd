@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'docker:latest'  // Use the official Docker image
-            args '--privileged -v /var/lib/docker'  // Enable privileged mode for DinD
-        }
-    }
+    agent any
 
     environment {
         registry = "https://registry.gitlab.com/devops9033903/devops"  // Replace with your GitLab registry path
