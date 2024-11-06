@@ -1,6 +1,9 @@
 pipeline {
     agent {
-        docker { image 'python:3.9-slim' }
+        docker {
+            image 'docker:latest'  // Use the official Docker image
+            args '--privileged -v /var/lib/docker'  // Enable privileged mode for DinD
+        }
     }
 
     environment {
