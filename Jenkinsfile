@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        registry = "https://registry.gitlab.com/devops9033903/devops"  // Replace with your GitLab registry path
+        registry = "registry.gitlab.com/devops9033903/devops"  // Replace with your GitLab registry path
         registryCredential = 'gitlab-credentials-id'  // Jenkins credential ID for GitLab
         dockerImage = ''
     }
