@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        docker { image 'python:3.9-slim' }
+    }
 
     environment {
         registry = "https://registry.gitlab.com/devops9033903/devops"  // Replace with your GitLab registry path
