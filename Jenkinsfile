@@ -27,20 +27,6 @@ pipeline {
                 }
             }
         }
-
-        stage('Deploy to Kubernetes (Minikube)') {
-            steps {
-                script {
-                    // Use SSH to interact with Minikube VM and deploy Kubernetes manifests
-                    sh """
-                    ssh ubuntu@13.208.182.172
-                    export KUBECONFIG= /home/ubuntu/.kube/config
-                    kubectl get pods
-                    '
-                    """
-                }
-            }
-        }
     }
 
     post {
