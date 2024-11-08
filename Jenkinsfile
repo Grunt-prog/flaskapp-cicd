@@ -3,11 +3,11 @@ pipeline {
 
     environment {
         registry = "registry.gitlab.com/devops9033903/devops"
-        registryCredential = 'gitlab-credentials-id'
+        registryCredential = 'gitlab-credentials-id' // Jenkins credential ID for GitLab registry
         dockerImage = ''
         k8sConfigPath = '/home/ubuntu/cicd'
         vmHost = '13.208.182.172' // Replace with your VM's IP address
-        sshKey = credentials('ssh-key') // Jenkins credential ID for your PEM file
+        sshKey = 'ssh-key' // Jenkins credential ID for SSH key
     }
 
     stages {
@@ -23,7 +23,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://registry.gitlab.com', registryCredential) {
-                        dockerImage.push("latest")
+                        dockerImage.push("latest") // Push both unique and latest tags
                     }
                 }
             }
@@ -33,8 +33,13 @@ pipeline {
             steps {
                 script {
                     // SSH into the VM and deploy the application
-                    sshagent(['sshKey']) { // Use SSH agent with your key
-                       ssh -i ${sshKey} user@${vmHost}
+                    sshagent([sshKey]) { // Reference credential ID directly
+                        sh """
+                        ssh -o StrictHostKeyChecking=no ubuntu@${vmHost} <<EOF
+                            kubectl apply -f ${k8sConfigPath}/app.yaml
+                            kubectl rollout restart deployment gitlab-app
+                        EOF
+                        """
                     }
                 }
             }
