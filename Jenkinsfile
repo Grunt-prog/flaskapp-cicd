@@ -34,7 +34,7 @@ pipeline {
                 script {
                     // SSH into the VM and deploy the application
                     sshagent(['sshKey']) { // Use SSH agent with your key
-                       ssh -o StrictHostKeyChecking=no -i ${sshKey} -C -c aes128-ctr user@${vmHost}
+                       ssh -i ${sshKey} user@${vmHost}
                     }
                 }
             }
