@@ -23,7 +23,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://registry.gitlab.com', registryCredential) {
-                        dockerImage.push("")
+                        dockerImage.push()
                         dockerImage.push("latest") // Push both unique and latest tags
                     }
                 }
