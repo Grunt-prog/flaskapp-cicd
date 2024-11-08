@@ -34,6 +34,7 @@ pipeline {
         sshagent([sshKey]) {
             sh """
             ssh -o StrictHostKeyChecking=no ubuntu@${vmHost} << 'EOF'
+            kubectl set image deployment/gitlab-app gitlab-container=registry.gitlab.com/devops9033903/devops:${BUILD_NUMBER}
             kubectl apply -f ${k8sConfigPath}/deployment.yaml
             kubectl rollout restart deployment gitlab-app
 EOF
