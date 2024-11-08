@@ -30,20 +30,18 @@ pipeline {
         }
 
         stage('Deploy to Minikube') {
-            steps {
-                script {
-                    // SSH into the VM and deploy the application
-                    sshagent([sshKey]) { // Reference credential ID directly
-                        sh """
-                        ssh -o StrictHostKeyChecking=no ubuntu@${vmHost} <<EOF
-                            kubectl apply -f ${k8sConfigPath}/app.yaml
-                            kubectl rollout restart deployment gitlab-app
-                        EOF
-                        """
-                    }
-                }
-            }
+    steps {
+        sshagent([sshKey]) {
+            sh """
+            ssh -o StrictHostKeyChecking=no user@${vmHost} << 'EOF'
+            kubectl apply -f ${k8sConfigPath}/deployment.yaml
+            kubectl rollout restart deployment gitlab-app
+EOF
+            """
         }
+    }
+}
+
     }
 
     post {
