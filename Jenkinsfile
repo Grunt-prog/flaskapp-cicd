@@ -33,7 +33,7 @@ pipeline {
     steps {
         sshagent([sshKey]) {
             sh """
-            ssh -o StrictHostKeyChecking=no user@${vmHost} << 'EOF'
+            ssh -o StrictHostKeyChecking=no ubuntu@${vmHost} << 'EOF'
             kubectl apply -f ${k8sConfigPath}/deployment.yaml
             kubectl rollout restart deployment gitlab-app
 EOF
