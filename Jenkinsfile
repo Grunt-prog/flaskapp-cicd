@@ -38,11 +38,12 @@ pipeline {
                     script {
                         // Deploy the application to Minikube
                         sh """
+                        ssh -o StrictHostKeyChecking=no ubuntu@${vmHost} <<EOF
                         set -e
-                        ssh -o StrictHostKeyChecking=no ubuntu@${vmHost} << 'EOF'
                         kubectl apply -f ${k8sConfigPath}/app.yaml
                         kubectl set image deployment/gitlab-app gitlab-container=${registry}:${env.BUILD_NUMBER}
                         kubectl rollout restart deployment gitlab-app
+                        kubectl rollout status deployment/gitlab-app
                         EOF
                         """
                     }
