@@ -36,7 +36,7 @@ pipeline {
                     sh """
                     ssh -o StrictHostKeyChecking=no ubuntu@${vmHost} << 'EOF'
                     if kubectl get pods -l app=gitlab-app --field-selector=status.phase=Running | grep -q Running; then
-                       kubectl delete pods -l app=gitlab-app --force --grace-period=0
+                        kubectl delete pods -l app=gitlab-app --force --grace-period=0
                     fi
                     kubectl apply -f ${k8sConfigPath}/app.yaml
                     kubectl set image deployment/gitlab-app gitlab-container=${registry}:${BUILD_NUMBER}
