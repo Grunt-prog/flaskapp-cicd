@@ -43,7 +43,6 @@ pipeline {
                         kubectl apply -f ${k8sConfigPath}/app.yaml
                         kubectl set image deployment/gitlab-app gitlab-container=${registry}:${env.BUILD_NUMBER}
                         kubectl rollout restart deployment gitlab-app
-                        kubectl rollout status deployment/gitlab-app
                         EOF
                         """
                     }
