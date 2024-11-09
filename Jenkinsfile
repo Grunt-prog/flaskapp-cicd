@@ -31,27 +31,27 @@ pipeline {
         }
 
         stage('Deploy to Minikube') {
-    steps {
-        sshagent([sshKey]) {
-            sh """
-            ssh -o StrictHostKeyChecking=no ubuntu@${vmHost} << 'EOF'
-            if [ -f ${k8sConfigPath}/app.yaml ]; then
-                echo "File exists."
-                if kubectl get pods -l app=gitlab-app --field-selector=status.phase=Running; then
-                    kubectl delete pods -l app=gitlab-app --force --grace-period=0
-                fi
-                kubectl apply -f ${k8sConfigPath}/app.yaml
-                kubectl set image deployment/gitlab-app gitlab-container=${registry}:${BUILD_NUMBER}
-                kubectl rollout restart deployment gitlab-app
-            else
-                echo "File does not exist at ${k8sConfigPath}/app.yaml"
-                exit 1
-            fi
-            EOF
-            """
+            steps {
+                sshagent([sshKey]) {
+                    sh """
+                    ssh -o StrictHostKeyChecking=no ubuntu@${vmHost} << 'EOF'
+                    if [ -f ${k8sConfigPath}/app.yaml ]; then
+                        echo "File exists."
+                        if kubectl get pods -l app=gitlab-app --field-selector=status.phase=Running | grep -q Running; then
+                            kubectl delete pods -l app=gitlab-app --force --grace-period=0
+                        fi
+                        kubectl apply -f ${k8sConfigPath}/app.yaml
+                        kubectl set image deployment/gitlab-app gitlab-container=${registry}:${BUILD_NUMBER}
+                        kubectl rollout restart deployment gitlab-app
+                    else
+                        echo "File does not exist at ${k8sConfigPath}/app.yaml"
+                        exit 1
+                    fi
+                    EOF
+                    """
+                }
+            }
         }
-    }
-}
     }
 
     post {
