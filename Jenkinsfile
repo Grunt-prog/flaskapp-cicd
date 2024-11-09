@@ -35,7 +35,8 @@ pipeline {
         sshagent([sshKey]) {
             sh """
             ssh -o StrictHostKeyChecking=no ubuntu@${vmHost} << 'EOF'
-            kubectl delete deployment gitlab-app --cascade=true
+            if kubectl get pods -l app=gitlab-app --field-selector=status.phase=Running | grep -q Running; then
+                        kubectl delete pods -l app=gitlab-app --force --grace-period=0
             kubectl apply -f ${k8sConfigPath}/app.yaml
             kubectl set image deployment/gitlab-app gitlab-container=registry.gitlab.com/devops9033903/devops:${BUILD_NUMBER}
             kubectl rollout restart deployment gitlab-app
