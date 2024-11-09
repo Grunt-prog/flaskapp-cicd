@@ -5,7 +5,7 @@ pipeline {
         registry = "registry.gitlab.com/devops9033903/devops"
         registryCredential = 'gitlab-credentials-id' // Jenkins credential ID for GitLab registry
         dockerImage = ''
-        k8sConfigPath = '/home/ubuntu/ritesh'
+        k8sConfigPath = '/home/ubuntu/ritesh' // Path to Kubernetes manifests
         vmHost = '13.208.182.172' // Replace with your VM's IP address
         sshKey = 'ssh-key' // Jenkins credential ID for SSH key
     }
@@ -38,6 +38,7 @@ pipeline {
                     script {
                         // Deploy the application to Minikube
                         sh """
+                        set -e
                         ssh -o StrictHostKeyChecking=no ubuntu@${vmHost} << 'EOF'
                         kubectl apply -f ${k8sConfigPath}/app.yaml
                         kubectl set image deployment/gitlab-app gitlab-container=${registry}:${env.BUILD_NUMBER}
