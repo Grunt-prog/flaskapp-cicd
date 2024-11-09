@@ -5,7 +5,7 @@ pipeline {
         registry = "registry.gitlab.com/devops9033903/devops"
         registryCredential = 'gitlab-credentials-id' // Jenkins credential ID for GitLab registry
         dockerImage = ''
-        k8sConfigPath = '/home/ubuntu/cicd'
+        k8sConfigPath = '/home/ubuntu/ritesh'
         vmHost = '13.208.182.172' // Replace with your VM's IP address
         sshKey = 'ssh-key' // Jenkins credential ID for SSH key
     }
