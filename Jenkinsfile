@@ -14,7 +14,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build("${registry}:${BUILD_NUMBER}")
+                    // Build the Docker image
+                    dockerImage = docker.build("${registry}:${env.BUILD_NUMBER}")
                 }
             }
         }
@@ -22,6 +23,7 @@ pipeline {
         stage('Push Docker Image to GitLab Registry') {
             steps {
                 script {
+                    // Push the image to GitLab registry
                     docker.withRegistry('https://registry.gitlab.com', registryCredential) {
                         dockerImage.push()
                         dockerImage.push("latest") // Push both unique and latest tags
@@ -33,13 +35,16 @@ pipeline {
         stage('Deploy to Minikube') {
             steps {
                 sshagent([sshKey]) {
-                    sh """
-                    ssh -o StrictHostKeyChecking=no ubuntu@${vmHost} << 'EOF'
-                    kubectl apply -f ${k8sConfigPath}/app.yaml
-                    kubectl set image deployment/gitlab-app gitlab-container=${registry}:${BUILD_NUMBER}
-                    kubectl rollout restart deployment gitlab-app
-                    EOF
-                    """
+                    script {
+                        // Deploy the application to Minikube
+                        sh """
+                        ssh -o StrictHostKeyChecking=no ubuntu@${vmHost} << 'EOF'
+                        kubectl apply -f ${k8sConfigPath}/app.yaml
+                        kubectl set image deployment/gitlab-app gitlab-container=${registry}:${env.BUILD_NUMBER}
+                        kubectl rollout restart deployment gitlab-app
+                        EOF
+                        """
+                    }
                 }
             }
         }
