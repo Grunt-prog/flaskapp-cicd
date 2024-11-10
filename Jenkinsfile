@@ -38,13 +38,12 @@ pipeline {
                     script {
                         // Deploy the application to Minikube
                         sh """
-                        ssh -o StrictHostKeyChecking=no ubuntu@${vmHost} <<EOF
-                          set -e
-                          kubectl delete deployment gitlab-app --cascade=true --ignore-not-found
-                          kubectl apply -f ${k8sConfigPath}/app.yaml
-                          kubectl set image deployment/gitlab-app gitlab-container=${registry}:${env.BUILD_NUMBER}
-                          kubectl rollout restart deployment gitlab-app
-                        EOF
+                        ssh -o StrictHostKeyChecking=no ubuntu@${vmHost} 
+                        kubectl delete deployment gitlab-app --cascade=true --ignore-not-found
+                        kubectl apply -f ${k8sConfigPath}/app.yaml
+                        kubectl set image deployment/gitlab-app gitlab-container=${registry}:${env.BUILD_NUMBER}
+                        kubectl rollout restart deployment gitlab-app
+                        
                         """
                     }
                 }
