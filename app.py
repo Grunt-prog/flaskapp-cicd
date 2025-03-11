@@ -3,7 +3,7 @@ import azure.functions as func
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/home')
 def home():
     return "Hello, ritesh123"
 
