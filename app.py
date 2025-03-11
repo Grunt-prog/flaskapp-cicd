@@ -1,5 +1,5 @@
-# app.py
-from flask import Flask
+from flask import Flask, request
+import azure.functions as func
 
 app = Flask(__name__)
 
@@ -7,6 +7,7 @@ app = Flask(__name__)
 def home():
     return "Hello, ritesh123"
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
-
+# Azure Functions Entry Point
+def main(req: func.HttpRequest) -> func.HttpResponse:
+    """Azure Function entry point"""
+    return func.WsgiMiddleware(app.wsgi_app).handle(req)
